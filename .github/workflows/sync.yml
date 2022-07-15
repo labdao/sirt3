@@ -18,5 +18,5 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
         AWS_REGION: 'insert_region_here'
-        SOURCE_DIR: 'what is being synced'
-        DEST_DIR: 'where it is being synced'
+        SOURCE_DIR: 'what is being synced -- defaults to the whole repo if this line is deleted'
+        DEST_DIR: 'where it is being synced -- blank is bucket root'
