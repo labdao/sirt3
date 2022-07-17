@@ -1,0 +1,22 @@
+name: S3 Sync
+
+on: 
+  push:
+    branches:
+    - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout/@master
+    - uses: jakejarvis/s3-snc-action@master
+      with: 
+        args: --acl public-read --eclude '.git/*' 
+      env:
+        AWS_S3_BUCKET: ${{secrets.AWS_S3_BUCKET}}
+        AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        AWS_REGION: 'insert_region_here'
+        SOURCE_DIR: 'what is being synced -- defaults to the whole repo if this line is deleted'
+        DEST_DIR: 'where it is being synced -- blank is bucket root'
