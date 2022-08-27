@@ -1,4 +1,4 @@
-labdao_apoc
+apoc
 ==============================
 
 blind docking of putative SIRT3 small molecule activators using equibind and vina
