@@ -1,0 +1,6 @@
+[submodule "lib/diffdock"]
+	path = lib/diffdock
+	url = https://github.com/labdao-apps/diffdock.git
+[submodule "lib/equibind"]
+	path = lib/equibind
+	url = https://github.com/labdao-apps/equibind.git
