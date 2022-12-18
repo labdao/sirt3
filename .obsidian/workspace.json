@@ -1,0 +1,251 @@
+{
+  "main": {
+    "id": "11cba364101d43ce",
+    "type": "split",
+    "children": [
+      {
+        "id": "df465ae4cbdb5b4e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "11595831533a2816",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          },
+          {
+            "id": "d24471d66171d36e",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          },
+          {
+            "id": "82a1b077fbe3e1a6",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          },
+          {
+            "id": "1a3ee7a59ebf7af0",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          },
+          {
+            "id": "da2a8daaf534cd59",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          },
+          {
+            "id": "c25ba46a550842e7",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          },
+          {
+            "id": "a8c4a7e072b7958a",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          },
+          {
+            "id": "6bd596158e681fc4",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          },
+          {
+            "id": "f3b42f7f9279f0fc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "notes/D3R challenge.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "c391289a13fddac8",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          },
+          {
+            "id": "9eb13fe673e7e503",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 8
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "e1e28dcfe9eedeaa",
+    "type": "split",
+    "children": [
+      {
+        "id": "43a178b718fdfb75",
+        "type": "tabs",
+        "dimension": 49.956178790534615,
+        "children": [
+          {
+            "id": "b5d96abd5c3b3dd9",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "265eb67439a92459",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "a71dd4a821a91d3f",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      },
+      {
+        "id": "751aed594be73423",
+        "type": "tabs",
+        "dimension": 50.04382120946538,
+        "children": [
+          {
+            "id": "37e349a210be68a3",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "graph",
+              "state": {},
+              "pinned": true
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 764.5
+  },
+  "right": {
+    "id": "4a1c9704b19314ce",
+    "type": "split",
+    "children": [
+      {
+        "id": "08706ca12e57c416",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5c105954fe68480f",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "notes/D3R challenge.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "fe7766a1b664be2a",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "notes/D3R challenge.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "f5d00e177fcda78d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "be9efc8936a59d91",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "notes/D3R challenge.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "f3b42f7f9279f0fc",
+  "lastOpenFiles": [
+    "notes/EXP - does diffdock lead to sota performance on the D3R GC4 BACE 1a problem?.md",
+    "README.md",
+    "unknown.png",
+    "lib/diffdock/visualizations/README.md",
+    "lib/equibind/data_preparation/README.md",
+    "references/@goossensAssessmentFragmentDocking2020.md",
+    "notes/CLM - useful benchmarks for fragment docking exist.md",
+    "notes/HYP - fragment based drug discovery can be accelerated with fragment docking and simulation.md",
+    "notes/CLM - molecular dynamics can be effectively used to approximate fragment binding.md",
+    "notes/fragment docking.md"
+  ]
+}

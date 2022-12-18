@@ -1,0 +1,55 @@
+---
+title: "Diffdock D3R Performance"
+author: "Niklas Rindtorff"
+date: "2022-12-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+diffdock_results <- read_delim("data/external/diffdock-results/BACE1/df_diffdock_results.tsv", 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
+
+bace <- read_csv(here("data/external/d3r_benchmark/BACE1/BACE_score_compounds_D3R_GC4_answers.csv")) %>% dplyr::select(ligand_id = Cmpd_ID,
+              ligand = SMILES,
+              affinity = Affinity) %>% 
+  mutate(gene = "BACE1")
+```
+
+```{r}
+benchmark <-  diffdock_results %>% rename(ligand = smiles) %>% 
+  left_join(bace) %>% drop_na()
+```
+
+```{r}
+benchmark %>% 
+  ggplot(aes(diffdock_confidence, affinity)) + 
+  geom_point(alpha = 0.2) + 
+  scale_y_log10()
+```
+
+```{r}
+benchmark %>% 
+  ggplot(aes(smina_scored_affinity, affinity)) + 
+  geom_point(alpha = 0.2) + 
+  scale_y_log10()
+```
+
+
+```{r}
+benchmark %>% 
+  ggplot(aes(smina_minimized_affinity, affinity)) + 
+  geom_point(alpha = 0.2) + 
+  scale_y_log10()
+```
+

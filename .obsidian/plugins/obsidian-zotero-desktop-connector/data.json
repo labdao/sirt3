@@ -1,0 +1,19 @@
+{
+  "database": "Zotero",
+  "noteImportFolder": "references",
+  "pdfExportImageDPI": 120,
+  "pdfExportImageFormat": "jpg",
+  "pdfExportImageQuality": 90,
+  "citeFormats": [],
+  "exportFormats": [
+    {
+      "name": "Import",
+      "outputPathTemplate": "references/@{{citekey}}.md",
+      "imageOutputPathTemplate": "references/assets/@{{citekey}}/",
+      "imageBaseNameTemplate": "image",
+      "cslStyle": "apa",
+      "templatePath": "_utils/getting started.md"
+    }
+  ],
+  "exeVersion": "1.0.14"
+}
