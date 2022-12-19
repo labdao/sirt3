@@ -1,0 +1,44 @@
+---
+title: "SIRT3 FDA affinity ranking"
+author: "Niklas Rindtorff"
+date: "2022-12-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+```
+
+we start out by installing a set of FDA approved compounds from an online source. This is list is not fully up to date, but should be sufficiently relevant to serve as a useful set to generate a reference affinity ranking that we can use to compare candidate compounds against. 
+
+```{r}
+system("wget http://www.cureffi.org/wp-content/uploads/2013/10/drugs.txt; mv drugs.txt data/external/fda_affinity_ranking/fda.txt")
+```
+we next subsample the set of FDA approved drugs to small molecules with an available SMILES
+
+```{r}
+fda <- read_delim("data/external/fda_affinity_ranking/fda.txt", 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE) %>% 
+  drop_na()
+```
+
+
+```{r}
+set.seed(24234)
+fda_sirt3 = fda %>% 
+  sample_n(499) %>%
+  dplyr::select(ligand_id = generic_name, ligand = smiles) %>%
+  rbind(c("5514", "O=C(COC1=CC=C(C[C@H](OCC)C(N(C)OC)=O)C=C1)C2=CC(OC)=CC=C2"), .) %>% 
+   # the path below expects the sirt3 repo to be cloned to the root dir
+  mutate(protein_path = "/sirt3/data/interim/sirt3_protein/4bn4_protein_stripped_no_ions.pdb") %>%
+  write_csv(here("data/processed/affinity_ranking/SIRT3/input_protein_ligand.csv"))
+  
+```
+
+

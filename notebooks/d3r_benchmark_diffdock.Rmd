@@ -32,6 +32,14 @@ benchmark <-  diffdock_results %>% rename(ligand = smiles) %>%
 ```
 
 ```{r}
+df <- benchmark %>% nest(-ligand, -pdb_file, -affinity) %>% 
+  mutate(top_5_mean = purrr::map(data, ~ .x %>% arrange(diffdock_confidence) %>% head(5) %>% mean(.x$diffdock_confidence)) %>% dplyr::select(-data) %>% unnest()
+#TODO implement top1, top5-mean, top10-mean
+         
+```
+
+
+```{r}
 benchmark %>% 
   ggplot(aes(diffdock_confidence, affinity)) + 
   geom_point(alpha = 0.2) + 
