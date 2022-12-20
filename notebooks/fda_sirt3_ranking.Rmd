@@ -37,6 +37,8 @@ fda_sirt3 = fda %>%
   rbind(c("5514", "O=C(COC1=CC=C(C[C@H](OCC)C(N(C)OC)=O)C=C1)C2=CC(OC)=CC=C2"), .) %>% 
    # the path below expects the sirt3 repo to be cloned to the root dir
   mutate(protein_path = "/sirt3/data/interim/sirt3_protein/4bn4_protein_stripped_no_ions.pdb") %>%
+  # only writing 5 for testing
+  head(5) %>%
   write_csv(here("data/processed/affinity_ranking/SIRT3/input_protein_ligand.csv"))
   
 ```
