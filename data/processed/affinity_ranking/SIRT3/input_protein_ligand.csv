@@ -1,6 +1,6 @@
 ligand_id,ligand,protein_path
-5514,O=C(COC1=CC=C(C[C@H](OCC)C(N(C)OC)=O)C=C1)C2=CC(OC)=CC=C2,/sirt3/data/interim/sirt3_protein/4bn4_protein_stripped_no_ions.pdb
-Alprazolam,CC1=NN=C2CN=C(C3=CC=CC=C3)C3=C(C=CC(Cl)=C3)N12,/sirt3/data/interim/sirt3_protein/4bn4_protein_stripped_no_ions.pdb
-Gemifloxacin,CO\N=C1/CN(CC1CN)C1=NC2=C(C=C1F)C(=O)C(=CN2C1CC1)C(O)=O,/sirt3/data/interim/sirt3_protein/4bn4_protein_stripped_no_ions.pdb
-Flumethasone Pivalate,C[C@@H]1C[C@H]2[C@@H]3C[C@H](F)C4=CC(=O)C=C[C@]4(C)[C@@]3(F)[C@@H](O)C[C@]2(C)[C@@]1(O)C(=O)COC(=O)C(C)(C)C,/sirt3/data/interim/sirt3_protein/4bn4_protein_stripped_no_ions.pdb
-Mestranol,[H][C@@]12CC[C@@](O)(C#C)[C@@]1(C)CC[C@]1([H])C3=C(CC[C@@]21[H])C=C(OC)C=C3,/sirt3/data/interim/sirt3_protein/4bn4_protein_stripped_no_ions.pdb
+5514,O=C(COC1=CC=C(C[C@H](OCC)C(N(C)OC)=O)C=C1)C2=CC(OC)=CC=C2,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
+Alprazolam,CC1=NN=C2CN=C(C3=CC=CC=C3)C3=C(C=CC(Cl)=C3)N12,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
+Gemifloxacin,CO\N=C1/CN(CC1CN)C1=NC2=C(C=C1F)C(=O)C(=CN2C1CC1)C(O)=O,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
+Flumethasone Pivalate,C[C@@H]1C[C@H]2[C@@H]3C[C@H](F)C4=CC(=O)C=C[C@]4(C)[C@@]3(F)[C@@H](O)C[C@]2(C)[C@@]1(O)C(=O)COC(=O)C(C)(C)C,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
+Mestranol,[H][C@@]12CC[C@@](O)(C#C)[C@@]1(C)CC[C@]1([H])C3=C(CC[C@@]21[H])C=C(OC)C=C3,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
