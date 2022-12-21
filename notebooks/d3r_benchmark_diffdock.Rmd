@@ -13,10 +13,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+library(here)
 ```
 
 ```{r}
-diffdock_results <- read_delim("data/external/diffdock-results/BACE1/df_diffdock_results.tsv", 
+diffdock_results <- read_delim(here("data/processed/affinity_ranking/BACE1/diffdock_221218_BACE1-complete-40samples/df_diffdock_results.tsv"), 
     delim = "\t", escape_double = FALSE, 
     trim_ws = TRUE)
 
@@ -26,36 +27,109 @@ bace <- read_csv(here("data/external/d3r_benchmark/BACE1/BACE_score_compounds_D3
   mutate(gene = "BACE1")
 ```
 
+## Exoperiments
+1) run diffdock with 40 samples 
+2) run diffdock with 100 samples - sample 40 randomly and then also 100
+3) run diffdock with 250 samples
+
+on a google collab pro, we can use a batch size of 32 and dock one complex per minute with 40 samples. Sampling 2.5x more poses, takes 2.5x more time
+
+2.5h for 150 copmounds at 40 samples per compound 
+6.25h for the same at 100 samples
+
 ```{r}
 benchmark <-  diffdock_results %>% rename(ligand = smiles) %>% 
   left_join(bace) %>% drop_na()
 ```
 
 ```{r}
-df <- benchmark %>% nest(-ligand, -pdb_file, -affinity) %>% 
-  mutate(top_5_mean = purrr::map(data, ~ .x %>% arrange(diffdock_confidence) %>% head(5) %>% mean(.x$diffdock_confidence)) %>% dplyr::select(-data) %>% unnest()
+top_benchmark <- benchmark %>% nest(-ligand, -pdb_file, -affinity) %>% 
+  expand_grid(., top = c(1:40)) %>%
+  mutate(top_data = purrr::map2(data, top, ~ .x %>% 
+                                   arrange(diffdock_confidence) %>% 
+                                   head(.y) %>%
+           dplyr::select(diffdock_confidence, smina_scored_affinity, smina_minimized_affinity) %>%
+           mutate(diffdock_confidence = mean(diffdock_confidence),
+                  smina_scored_affinity = mean(smina_scored_affinity),
+                  smina_minimized_affinity = mean(smina_minimized_affinity)) %>% 
+           distinct())) 
 #TODO implement top1, top5-mean, top10-mean
-         
+
+cor_top_benchmark <- top_benchmark%>% dplyr::select(-data) %>% unnest(top_data) %>% 
+  nest(-ligand, -pdb_file, -top) %>% 
+  mutate(correlation = purrr::map(data, ~ .x %>% 
+                                    mutate(r_diffdock_confidence = cor(diffdock_confidence, affinity, method = "spearman"),
+                                           r_smina_scored_affinity = cor(smina_scored_affinity, affinity, method = "spearman"),
+                                           r_smina_minimized_affinity = cor(smina_minimized_affinity, affinity, method = "spearman")) %>%
+                                    dplyr::select(r_diffdock_confidence,
+                                                  r_smina_scored_affinity,
+                                                  r_smina_minimized_affinity) %>%
+                                    distinct()))
+
+top1 <- df %>% dplyr::select(ligand, pdb_file, affinity, top_1_mean) %>% unnest() %>% arrange(affinity) %>%
+  group_by(pdb_file, ligand, affinity) %>% 
+  summarise(diffdock_confidence = mean(diffdock_confidence),
+            smina_scored_affinity = mean(smina_scored_affinity),
+            smina_minimized_affinity = mean(smina_minimized_affinity))
+
+top5 <- df %>% dplyr::select(ligand, pdb_file, affinity, top_5_mean) %>% unnest() %>% arrange(affinity) %>%
+  group_by(pdb_file, ligand, affinity) %>% 
+  summarise(diffdock_confidence = mean(diffdock_confidence),
+            smina_scored_affinity = mean(smina_scored_affinity),
+            smina_minimized_affinity = mean(smina_minimized_affinity))
+
+top40 <- df %>% dplyr::select(ligand, pdb_file, affinity, top_40_mean) %>% unnest() %>% arrange(affinity) %>%
+  group_by(pdb_file, ligand, affinity) %>% 
+  summarise(diffdock_confidence = mean(diffdock_confidence),
+            smina_scored_affinity = mean(smina_scored_affinity),
+            smina_minimized_affinity = mean(smina_minimized_affinity))
+
+```
+
+```{r}
+cor(top1$diffdock_confidence, top1$affinity, method = "spearman")
+cor(top5$diffdock_confidence, top5$affinity, method = "spearman")
+cor(top40$diffdock_confidence, top40$affinity, method = "spearman")
+
+cor(top1$smina_scored_affinity, top1$affinity, method = "spearman")
+cor(top5$smina_scored_affinity, top5$affinity, method = "spearman")
+cor(top40$smina_scored_affinity, top40$affinity, method = "spearman")
+
+cor(top1$smina_minimized_affinity, top1$affinity, method = "spearman")
+cor(top5$smina_minimized_affinity, top5$affinity, method = "spearman")
+cor(top40$smina_minimized_affinity, top40$affinity, method = "spearman")
 ```
 
 
+
+the performance of smina scored affinity increases the more samples we are generating with diffdock
+in contrast, the performance of the diffdock confidence score itself drops, as we average over the top set of scores
+
+
+this was with 40 samples per step -> let's see what happens when we move to 100
+
+TODO: does increasing the diffdock samples further stabilise our estimates? - can we drive up the performance by sampling more basically?
+TODO: plot the competing models here as well 
+
 ```{r}
-benchmark %>% 
+top40 %>% 
   ggplot(aes(diffdock_confidence, affinity)) + 
   geom_point(alpha = 0.2) + 
-  scale_y_log10()
+  scale_y_log10() + 
+  geom_smooth(method = "lm")
 ```
 
 ```{r}
-benchmark %>% 
+top40 %>% 
   ggplot(aes(smina_scored_affinity, affinity)) + 
   geom_point(alpha = 0.2) + 
-  scale_y_log10()
+  scale_y_log10() + 
+  geom_smooth(method = "lm")
 ```
 
 
 ```{r}
-benchmark %>% 
+df %>% 
   ggplot(aes(smina_minimized_affinity, affinity)) + 
   geom_point(alpha = 0.2) + 
   scale_y_log10()
