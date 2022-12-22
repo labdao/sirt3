@@ -68,6 +68,42 @@
             }
           },
           {
+            "id": "ce441f7325e23b19",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "notes/CLM - spearman correlation of the D3R Challenge is reproducible with the downloadable scores.md",
+                "mode": "preview",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "36a26b4a691f89ab",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "notes/CLM - the higher the smina score, the lower the binding free energy and IC50 generally.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "75072bc0fb6d814f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "notes/CLM - diffdock confidence score and binding affinity are anticorrelated.md",
+                "mode": "preview",
+                "source": true
+              }
+            }
+          },
+          {
             "id": "a8c4a7e072b7958a",
             "type": "leaf",
             "state": {
@@ -96,7 +132,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 7
       }
     ],
     "direction": "vertical"
@@ -180,7 +216,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "notes/CLM - similarity-weighted sampling of protein structures based on bound ligands can improve blind-docking based affinity ranking.md",
+                "file": "notes/CLM - diffdock confidence score and binding affinity are anticorrelated.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -197,7 +233,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "notes/CLM - similarity-weighted sampling of protein structures based on bound ligands can improve blind-docking based affinity ranking.md",
+                "file": "notes/CLM - diffdock confidence score and binding affinity are anticorrelated.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -220,7 +256,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/CLM - similarity-weighted sampling of protein structures based on bound ligands can improve blind-docking based affinity ranking.md"
+                "file": "notes/CLM - diffdock confidence score and binding affinity are anticorrelated.md"
               }
             }
           }
@@ -242,17 +278,17 @@
       "publish:Publish changes": false
     }
   },
-  "active": "b811f5c3f59ca4d0",
+  "active": "75072bc0fb6d814f",
   "lastOpenFiles": [
+    "notes/CLM - the higher the smina score, the lower the binding free energy and IC50 generally.md",
+    "notes/CLM - spearman correlation of the D3R Challenge is reproducible with the downloadable scores.md",
+    "notes/CLM - similarity-weighted sampling of protein structures based on bound ligands can improve blind-docking based affinity ranking.md",
     "notes/CLM - sampling over ligand poses as well as receptor structures improves affinity ranking performance with diffusion models.md",
     "notes/CLM - the average smina score of the top1-20 poses within the sample leads to robust estimates with diffusion based blind docking.md",
     "notes/CLM - increased sampling rate has a diminishing return in diffusion based docking.md",
     "notes/CLM - smina scoring is superior to internal confidence scoring for affinity ranking tasks.md",
     "notes/Untitled.md",
     "notes/EXP - does diffdock lead to sota performance on the D3R GC4 BACE 1a problem?.md",
-    "notebooks/d3r_benchmark_preparation.md",
-    "notes/D3R challenge.md",
-    "README.md",
-    "unknown.png"
+    "notebooks/d3r_benchmark_preparation.md"
   ]
 }

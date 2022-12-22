@@ -36,7 +36,7 @@ fda <- read_delim(here("data/external/fda_affinity_ranking/fda.txt"),
 ```{r}
 set.seed(24234)
 fda_sirt3 = fda %>% 
-  sample_n(498) %>%
+  sample_n(298) %>%
   dplyr::select(ligand_id = generic_name, ligand = smiles) %>%
   rbind(c("5514", "O=C(COC1=CC=C(C[C@H](OCC)C(N(C)OC)=O)C=C1)C2=CC(OC)=CC=C2"), .) %>% 
   rbind(c("NAD-Ribose", "c1nc(c2c(n1)n(cn2)[C@H]3[C@@H]([C@@H]([C@H](O3)COP(=O)(O)OP(=O)(O)OC[C@@H]4[C@H]([C@H]([C@H](O4)O)O)O)O)O)N"), .) %>% 
@@ -59,14 +59,30 @@ fda_sirt3_ranking <- read_delim(here("data/processed/affinity_ranking/test/diffd
   rbind(read_delim(here("data/processed/affinity_ranking/test/diffdock_221220 SIRT3-5/df_diffdock_results.tsv"), 
     delim = "\t", escape_double = FALSE, 
     trim_ws = TRUE) %>% 
-  mutate(replicate = 1))
+  mutate(replicate = 1)) %>% 
+  rbind(read_delim(here("data/processed/affinity_ranking/test/diffdock_221222 SIRT3-10-ADPRibose/df_diffdock_results.tsv"), 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE) %>% 
+  mutate(replicate = 3))
+```
+
+```{r}
+fda_sirt3_ranking %>% 
+  filter(replicate == 3) %>% 
+  dplyr::select(ligand = smiles, everything()) %>%
+  left_join(fda_sirt3) %>% 
+  ggplot(aes(diffdock_confidence, smina_scored_affinity, color = ligand_id)) + 
+    geom_point()
 ```
 
 ```{r}
 fda_sirt3_ranking %>% 
   dplyr::select(ligand = smiles, everything()) %>%
-  left_join(fda_sirt3) %>%
-  ggplot(aes(diffdock_confidence, smina_scored_affinity, color = ligand_id)) + 
-    geom_point()
+  left_join(fda_sirt3) %>% 
+  arrange(desc(smina_scored_affinity))
+```
+
+```{r}
+
 ```
 

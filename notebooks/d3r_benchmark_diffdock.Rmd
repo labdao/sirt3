@@ -114,7 +114,7 @@ cor_top_smina_benchmark %>%
   unnest(correlation) %>% 
   #filter(top <= 40) %>%
   gather(metric, score, -pdb_file, -top, -data, -replicate, -arrange) %>%
-  ggplot(aes(top, abs(score), color = metric)) + 
+  ggplot(aes(top, score, color = metric)) + 
   geom_line() + 
   facet_grid(arrange ~ replicate) + 
   theme_bw() + 
@@ -132,24 +132,87 @@ this was with 40 samples per step -> let's see what happens when we move to 100
 TODO: does increasing the diffdock samples further stabilise our estimates? - can we drive up the performance by sampling more basically?
 TODO: plot the competing models here as well 
 
+
 ```{r}
-top40 %>% 
-  ggplot(aes(diffdock_confidence, affinity)) + 
-  geom_point(alpha = 0.2) + 
-  scale_y_log10() + 
-  geom_smooth(method = "lm")
+top_smina_benchmark %>% 
+  filter(top == 1) %>% 
+  unnest(top_data) %>% 
+  ggplot(aes(smina_scored_affinity, diffdock_confidence, color = diffdock_confidence)) + 
+  geom_point() + 
+  #scale_y_log10() + 
+  geom_smooth(method = "lm") + 
+  facet_grid(~ replicate) + 
+  scale_color_viridis_c()
 ```
 
 ```{r}
 top_smina_benchmark %>% 
   filter(top == 1) %>% 
   unnest(top_data) %>% 
-  ggplot(aes(smina_scored_affinity, affinity, color = factor(replicate))) + 
-  geom_point(alpha = 0.2) + 
+  ggplot(aes(smina_scored_affinity, affinity, color = diffdock_confidence)) + 
+  geom_point() + 
   scale_y_log10() + 
-  geom_smooth(method = "lm")
+  geom_smooth(method = "lm") + 
+  facet_grid(~ replicate) + 
+  scale_color_viridis_c()
+```
+
+
+
+```{r}
+top_smina_benchmark %>% 
+  filter(top == 1) %>% 
+  unnest(top_data) %>% 
+  ggplot(aes(-smina_scored_affinity, affinity, color = diffdock_confidence)) + 
+  geom_point() + 
+  scale_y_log10() + 
+  geom_smooth(method = "lm") + 
+  facet_grid(~ replicate) + 
+  scale_color_viridis_c()
 
 ```
+
+
+h7uaj - 1
+n3s8g - 2
+bqw2m - 3
+4h85h - 5
+obbja - 10
+
+```{r}
+winner <- read_csv(here("data/external/d3r_benchmark/submissions/BACEStage1a/structure_based/Structure-Based_Score_Iorga_BestScore_Phase_1a/LigandScores.csv"), 
+    skip = 3) %>% 
+  dplyr::select(ligand_id = `#LigandID`, winner_score = Score, rank = Rank) %>%
+  left_join(bace)
+
+
+
+winner %>% 
+  ggplot(aes(winner_score, affinity, color = rank)) +
+  geom_point() + 
+  scale_y_log10() + 
+  geom_smooth(method = "lm") + scale_color_viridis_b() + theme_bw()
+
+```
+
+```{r}
+cor(winner$winner_score, winner$affinity, method = "spearman")
+```
+
+
+```{r}
+top_smina_benchmark %>% 
+  filter(top == 1) %>% 
+  unnest(top_data) %>% 
+  left_join(winner) %>% 
+  ggplot(aes(smina_scored_affinity, winner_score, color = log(affinity))) + 
+  geom_point() + 
+  #scale_y_log10() + 
+  geom_smooth(method = "lm") + 
+  facet_grid(~ replicate) + 
+  scale_color_viridis_c()
+```
+
 
 ```{r}
 top_smina_benchmark %>% 
