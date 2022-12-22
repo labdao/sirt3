@@ -1,6 +1,11 @@
 ligand_id,ligand,protein_path
+"NAD-Ribose",c1nc(c2c(n1)n(cn2)[C@H]3[C@@H]([C@@H]([C@H](O3)COP(=O)(O)OP(=O)(O)OC[C@@H]4[C@H]([C@H]([C@H](O4)O)O)O)O)O)N,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
 5514,O=C(COC1=CC=C(C[C@H](OCC)C(N(C)OC)=O)C=C1)C2=CC(OC)=CC=C2,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
 Alprazolam,CC1=NN=C2CN=C(C3=CC=CC=C3)C3=C(C=CC(Cl)=C3)N12,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
 Gemifloxacin,CO\N=C1/CN(CC1CN)C1=NC2=C(C=C1F)C(=O)C(=CN2C1CC1)C(O)=O,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
 Flumethasone Pivalate,C[C@@H]1C[C@H]2[C@@H]3C[C@H](F)C4=CC(=O)C=C[C@]4(C)[C@@]3(F)[C@@H](O)C[C@]2(C)[C@@]1(O)C(=O)COC(=O)C(C)(C)C,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
 Mestranol,[H][C@@]12CC[C@@](O)(C#C)[C@@]1(C)CC[C@]1([H])C3=C(CC[C@@]21[H])C=C(OC)C=C3,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
+Chenodeoxycholic acid,[H][C@@]1(CC[C@@]2([H])[C@]3([H])[C@H](O)C[C@]4([H])C[C@H](O)CC[C@]4(C)[C@@]3([H])CC[C@]12C)[C@H](C)CCC(O)=O,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
+Bepridil,CC(C)COCC(CN(CC1=CC=CC=C1)C1=CC=CC=C1)N1CCCC1,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
+Nilvadipine,COC(=O)C1=C(NC(C)=C(C1C1=CC(=CC=C1)[N+]([O-])=O)C(=O)OC(C)C)C#N,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb
+Halofantrine,CCCCN(CCCC)CCC(O)C1=C2C=CC(=CC2=C2C=C(Cl)C=C(Cl)C2=C1)C(F)(F)F,/tmp/pdb/4bn4_protein_stripped_no_ions.pdb

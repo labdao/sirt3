@@ -2,8 +2,10 @@
 title: "Diffdock D3R Performance"
 author: "Niklas Rindtorff"
 date: "2022-12-18"
-output: html_document
+output: md_document
 ---
+
+# Diffdock D3R Performance
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -19,7 +21,11 @@ library(here)
 ```{r}
 diffdock_results <- read_delim(here("data/processed/affinity_ranking/BACE1/diffdock_221218_BACE1-complete-40samples/df_diffdock_results.tsv"), 
     delim = "\t", escape_double = FALSE, 
-    trim_ws = TRUE)
+    trim_ws = TRUE) %>% 
+  mutate(replicate = 1) %>% 
+  rbind(., read_csv(here("data/processed/affinity_ranking/BACE1/diffdock_221221_BACE1-complete-100samples/df_diffdock_results.csv")) %>%
+      mutate(replicate = 2) %>% .[,-1])
+
 
 bace <- read_csv(here("data/external/d3r_benchmark/BACE1/BACE_score_compounds_D3R_GC4_answers.csv")) %>% dplyr::select(ligand_id = Cmpd_ID,
               ligand = SMILES,
@@ -43,11 +49,23 @@ benchmark <-  diffdock_results %>% rename(ligand = smiles) %>%
 ```
 
 ```{r}
-top_benchmark <- benchmark %>% nest(-ligand, -pdb_file, -affinity) %>% 
-  expand_grid(., top = c(1:40)) %>%
+top_diffdock_benchmark <- benchmark %>% nest(-ligand, -pdb_file, -affinity, -replicate) %>% 
+  expand_grid(., top = c(1:100)) %>%
   mutate(top_data = purrr::map2(data, top, ~ .x %>% 
                                    arrange(diffdock_confidence) %>% 
-                                   head(.y) %>%
+                                   head(min(nrow(.x), .y)) %>%
+           dplyr::select(diffdock_confidence, smina_scored_affinity, smina_minimized_affinity) %>%
+           mutate(diffdock_confidence = mean(diffdock_confidence),
+                  smina_scored_affinity = mean(smina_scored_affinity),
+                  smina_minimized_affinity = mean(smina_minimized_affinity)) %>% 
+           distinct())) 
+
+
+top_smina_benchmark <- benchmark %>% nest(-ligand, -pdb_file, -affinity, -replicate) %>% 
+  expand_grid(., top = c(1:100)) %>%
+  mutate(top_data = purrr::map2(data, top, ~ .x %>% 
+                                   arrange(smina_scored_affinity) %>% 
+                                   head(min(nrow(.x), .y)) %>%
            dplyr::select(diffdock_confidence, smina_scored_affinity, smina_minimized_affinity) %>%
            mutate(diffdock_confidence = mean(diffdock_confidence),
                   smina_scored_affinity = mean(smina_scored_affinity),
@@ -55,8 +73,8 @@ top_benchmark <- benchmark %>% nest(-ligand, -pdb_file, -affinity) %>%
            distinct())) 
 #TODO implement top1, top5-mean, top10-mean
 
-cor_top_benchmark <- top_benchmark%>% dplyr::select(-data) %>% unnest(top_data) %>% 
-  nest(-ligand, -pdb_file, -top) %>% 
+cor_top_diffdock_benchmark <- top_diffdock_benchmark %>% dplyr::select(-data) %>% unnest(top_data) %>% 
+  nest(-pdb_file, -top, -replicate) %>% 
   mutate(correlation = purrr::map(data, ~ .x %>% 
                                     mutate(r_diffdock_confidence = cor(diffdock_confidence, affinity, method = "spearman"),
                                            r_smina_scored_affinity = cor(smina_scored_affinity, affinity, method = "spearman"),
@@ -66,41 +84,44 @@ cor_top_benchmark <- top_benchmark%>% dplyr::select(-data) %>% unnest(top_data) 
                                                   r_smina_minimized_affinity) %>%
                                     distinct()))
 
-top1 <- df %>% dplyr::select(ligand, pdb_file, affinity, top_1_mean) %>% unnest() %>% arrange(affinity) %>%
-  group_by(pdb_file, ligand, affinity) %>% 
-  summarise(diffdock_confidence = mean(diffdock_confidence),
-            smina_scored_affinity = mean(smina_scored_affinity),
-            smina_minimized_affinity = mean(smina_minimized_affinity))
-
-top5 <- df %>% dplyr::select(ligand, pdb_file, affinity, top_5_mean) %>% unnest() %>% arrange(affinity) %>%
-  group_by(pdb_file, ligand, affinity) %>% 
-  summarise(diffdock_confidence = mean(diffdock_confidence),
-            smina_scored_affinity = mean(smina_scored_affinity),
-            smina_minimized_affinity = mean(smina_minimized_affinity))
-
-top40 <- df %>% dplyr::select(ligand, pdb_file, affinity, top_40_mean) %>% unnest() %>% arrange(affinity) %>%
-  group_by(pdb_file, ligand, affinity) %>% 
-  summarise(diffdock_confidence = mean(diffdock_confidence),
-            smina_scored_affinity = mean(smina_scored_affinity),
-            smina_minimized_affinity = mean(smina_minimized_affinity))
+cor_top_smina_benchmark <- top_smina_benchmark %>% dplyr::select(-data) %>% unnest(top_data) %>% 
+  nest(-pdb_file, -top, -replicate) %>% 
+  mutate(correlation = purrr::map(data, ~ .x %>% 
+                                    mutate(r_diffdock_confidence = cor(diffdock_confidence, affinity, method = "spearman"),
+                                           r_smina_scored_affinity = cor(smina_scored_affinity, affinity, method = "spearman"),
+                                           r_smina_minimized_affinity = cor(smina_minimized_affinity, affinity, method = "spearman")) %>%
+                                    dplyr::select(r_diffdock_confidence,
+                                                  r_smina_scored_affinity,
+                                                  r_smina_minimized_affinity) %>%
+                                    distinct()))
 
 ```
+
+do affinity scores get worse as you sample?
+no - it seems as if 40 samples are suffiecient to reach the bottom of the pile in terms of confidence scores
 
 ```{r}
-cor(top1$diffdock_confidence, top1$affinity, method = "spearman")
-cor(top5$diffdock_confidence, top5$affinity, method = "spearman")
-cor(top40$diffdock_confidence, top40$affinity, method = "spearman")
-
-cor(top1$smina_scored_affinity, top1$affinity, method = "spearman")
-cor(top5$smina_scored_affinity, top5$affinity, method = "spearman")
-cor(top40$smina_scored_affinity, top40$affinity, method = "spearman")
-
-cor(top1$smina_minimized_affinity, top1$affinity, method = "spearman")
-cor(top5$smina_minimized_affinity, top5$affinity, method = "spearman")
-cor(top40$smina_minimized_affinity, top40$affinity, method = "spearman")
+benchmark %>% arrange(pdb_file, ligand, diffdock_confidence)
 ```
 
 
+
+```{r}
+cor_top_smina_benchmark %>% 
+  mutate(arrange = "smina") %>% 
+  rbind(cor_top_diffdock_benchmark %>% 
+          mutate(arrange = "diffdock")) %>%
+  unnest(correlation) %>% 
+  #filter(top <= 40) %>%
+  gather(metric, score, -pdb_file, -top, -data, -replicate, -arrange) %>%
+  ggplot(aes(top, abs(score), color = metric)) + 
+  geom_line() + 
+  facet_grid(arrange ~ replicate) + 
+  theme_bw() + 
+  geom_hline(yintercept = 0)
+```
+
+Based on this anecdotal information, we can conclude that exhaustive sampling does not seem to lead to improved spearman correlation. In fact, when sampling 40 complexes, the top1 is a safe choice. The top5, and top20 can probably be used, too. 
 
 the performance of smina scored affinity increases the more samples we are generating with diffdock
 in contrast, the performance of the diffdock confidence score itself drops, as we average over the top set of scores
@@ -120,18 +141,22 @@ top40 %>%
 ```
 
 ```{r}
-top40 %>% 
-  ggplot(aes(smina_scored_affinity, affinity)) + 
+top_smina_benchmark %>% 
+  filter(top == 1) %>% 
+  unnest(top_data) %>% 
+  ggplot(aes(smina_scored_affinity, affinity, color = factor(replicate))) + 
   geom_point(alpha = 0.2) + 
   scale_y_log10() + 
   geom_smooth(method = "lm")
-```
 
+```
 
 ```{r}
-df %>% 
-  ggplot(aes(smina_minimized_affinity, affinity)) + 
-  geom_point(alpha = 0.2) + 
-  scale_y_log10()
+top_smina_benchmark %>% 
+  filter(top == 1) %>% 
+  unnest(top_data) %>% 
+  arrange(desc(affinity)) %>% 
+  left_join(benchmark)
 ```
+
 
