@@ -29,21 +29,62 @@ In the spirit of zero-shot predictions, we store the FASTA file of the protein t
 bace <- read_csv(here("data/external/d3r_benchmark/BACE1/BACE_score_compounds_D3R_GC4_answers.csv")) %>% dplyr::select(ligand_id = Cmpd_ID,
               ligand = SMILES,
               affinity = Affinity) %>% 
-  mutate(gene = "BACE1")
+  mutate(gene = "BACE1") %>% 
+  mutate(unit = "") %>% 
+  mutate(metric = "ic50") %>%
+  mutate(method = "") %>%
+  mutate(pdb = NA) %>%
+  mutate(uniprot = "P56817")
+  drop_na(affinity, ligand, ligand_id)
+
+
 cats <- read_csv(here("data/external/d3r_benchmark/CatS/CatS_score_compounds_D3R_GC4_answers.csv")) %>% dplyr::select(ligand_id = Cmpd_ID,
               ligand = SMILES,
               affinity = Affinity) %>% 
-  mutate(gene = "CTSS")
+  mutate(gene = "CTSS") %>%
+    mutate(unit = "") %>% 
+  mutate(metric = "") %>%
+  mutate(method = "") %>%
+  mutate(pdb = NA) %>%
+  mutate(uniprot = "P25774") %>%
+  drop_na(affinity, ligand, ligand_id)
+
+
 jak2 <- read_csv(here("data/external/d3r_benchmark/JAK2_SC2/JAK2_SC2_score_compounds_D3R_GC3.csv")) %>%
   dplyr::select(ligand_id = Ligand_ID,
               ligand = Smiles,
               affinity = `Kd(uM)`) %>%
-  mutate(gene = "JAK2")
+  mutate(gene = "JAK2") %>% 
+    mutate(unit = "uM") %>% 
+  mutate(metric = "kd") %>%
+  mutate(method = "") %>%
+  mutate(pdb = NA) %>%
+  mutate(uniprot = "O60674") %>%
+  drop_na(affinity, ligand, ligand_id)
+
 p38a <- read_csv(here("data/external/d3r_benchmark/p38a/p38a_score_compounds_D3R_GC3.csv")) %>%
   dplyr::select(ligand_id = Ligand_ID,
               ligand = Smiles,
               affinity = `Kd(uM)`) %>%
-  mutate(gene = "MAPK14")
+  mutate(gene = "MAPK14") %>% 
+    mutate(unit = "uM") %>% 
+  mutate(metric = "kd") %>%
+  mutate(method = "") %>%
+  mutate(pdb = NA) %>%
+  mutate(uniprot = "Q16539") %>%
+  drop_na(affinity, ligand, ligand_id)
+
+vegfr2 <- read_csv(here("data/external/d3r_benchmark/VEGFR2/VEGFR2_score_compounds_D3R_GC3.csv")) %>%
+  dplyr::select(ligand_id = Ligand_ID,
+              ligand = Smiles,
+              affinity = `Kd(uM)`) %>%
+  mutate(gene = "VEGFR2") %>%
+  mutate(unit = "uM") %>% 
+  mutate(metric = "kd") %>%
+  mutate(method = "") %>%
+  mutate(pdb = NA) %>%
+  mutate(uniprot = "P35968") %>%
+  drop_na(affinity, ligand, ligand_id)
 
 cdk2 <- read_excel(here("data/external/d3r_benchmark/CDK2_Binding_Data_Corrected_2016AUG18.xlsx.xlsx")) %>%
   dplyr::select(ligand_id = Compound_ID,
@@ -52,10 +93,95 @@ cdk2 <- read_excel(here("data/external/d3r_benchmark/CDK2_Binding_Data_Corrected
               pdb = `PDB ID`) %>%
   mutate(gene = "CDK2") %>% 
   mutate(unit = "nM") %>% 
-  drop_na()
+  mutate(metric = "kd") %>%
+  mutate(method = "biolayer interferometry") %>%
+  mutate(uniprot = "P24941") %>%
+  drop_na(affinity, ligand, ligand_id)
+
+chk1 <- read_excel(here("data/external/d3r_benchmark/Chk1_Binding_Data.xlsx.xlsx")) %>%
+  dplyr::select(ligand_id = Compound_ID,
+              ligand = SMILES,
+              affinity = `Experimental Result, Value`,
+              pdb = `PDB ID`) %>%
+  mutate(gene = "CHEK1") %>% 
+  mutate(unit = "nM") %>% 
+  mutate(metric = "ic50") %>%
+  mutate(method = "radiometric ligand binding") %>%
+  mutate(uniprot = "O14757") %>%
+  drop_na(affinity, ligand, ligand_id)
+
+erk2 <- read_excel(here("data/external/d3r_benchmark/ERK2_Binding_Data.xlsx.xlsx")) %>%
+  dplyr::select(ligand_id = Compound_ID,
+              ligand = SMILES,
+              affinity = `Experimental Results, Average Value`,
+              pdb = `PDB ID`) %>%
+  mutate(gene = "MAPK1") %>% 
+  mutate(unit = "") %>% 
+  mutate(metric = "Ki") %>%
+  mutate(method = "FRET") %>%
+  mutate(uniprot = "P28482") %>%
+  drop_na(affinity, ligand, ligand_id)
+
+hsp90 <- read_excel(here("data/external/d3r_benchmark/HSP90-CDD Export - 2016-08-31.xls.xls")) %>% 
+  dplyr::select(ligand_id = `Compound ID`,
+              ligand = SMILES,
+              affinity = `FRET Assay 1: IC50 (nM)`,
+              pdb = `PDB ID`) %>% 
+  mutate(gene = "HSP90AA1") %>% 
+  mutate(unit = "nM") %>% 
+  mutate(metric = "ic50") %>%
+  mutate(method = "FRET") %>%
+  mutate(uniprot = "P07900") %>%
+  drop_na(affinity, ligand, ligand_id)
+  
+syk <- read_excel(here("data/external/d3r_benchmark/SYK_Binding_Data.xlsx.xlsx")) %>% 
+  dplyr::select(ligand_id = `Compound_ID`,
+              ligand = SMILES,
+              affinity = `Experimental Result, Average Value`,
+              pdb = `PDB ID`) %>% 
+  mutate(gene = "SYK") %>% 
+  mutate(unit = "nM") %>% 
+  mutate(metric = "ic50") %>%
+  mutate(method = "FRET") %>%
+  mutate(uniprot = "P43405") %>%
+  drop_na(affinity, ligand, ligand_id)
 
 ```
 
 ```{r}
-#todo import all datasets, check methods and units of affinity
+d3r_benchmark <- rbind(cdk2,
+      p38a,
+      jak2,
+      cats,
+      bace,
+      chk1,
+      erk2,
+      hsp90,
+      syk,
+      vegfr2
+      )
 ```
+
+#todo - check for dynamic range of measurement
+#todo - harmonise the affinity units
+#todo-  add the early bace data as well
+
+## other data to add
+* DREAM challenge (also the CHembl data these teams trained on?)
+
+## 3 tiers
+* complex available - PDBind 
+* Kd, IC50 / etc. available - US?
+* HTS-screen score available - (in the future?)
+
+of the PDBind data - how many ligands are therapeurics?
+of the therapeutic candidates - how many made it into clinical trials?
+of the ones that are in clinical trials - how many made it to approval?
+
+PDBind has 
+
+# todo - check for availability in PDBind (unlikely given that most interactions have no structure)
+here we release a set of 2000 observations for 10 targets
+
+
+PDBind CN has 20000 measurements in the general set, 5k in the refined set

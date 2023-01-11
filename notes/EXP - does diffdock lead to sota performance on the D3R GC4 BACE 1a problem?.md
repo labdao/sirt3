@@ -26,3 +26,13 @@ Does [[diffdock]] lead to [[SOTA]] performance in the [[D3R challenge]] [[D3R GC
 ## [[plan]]
 1. set up [[diffdock]] in an instance which can run multiple ligands and receptors against eachother
 2. run model against the ligand protein sets provided and correlate the confidence score against the pIC50s in the dataset
+
+## results 
+[[CLM - diffdock leads to top-3 performance on the D3R GC4 BACE 1a problem]]
+
+## next experiments 
+[[EXP - does diffdock lead to sota performance across D3R challenges?]]
+[[EXP - does diffdock lead to sota performance on a DREAM-kinase challenge ?]]
+[[EXP - does diffdock lead to interpretable results on a FDA SMILES x FASTA cross-docking?]]
+
+[[EXP - what is the time and compute cost of running diffdock against SOTA methods?]]

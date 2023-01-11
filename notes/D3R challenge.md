@@ -19,3 +19,9 @@ hosted at [[UCSD]] by [[michael gilson]]
 ## data
 The challenge data can be accessed at https://drugdesigndata.org/about/datasets
 the [[D3R benchmark]] description is explained in [[d3r_benchmark_preparation]]
+
+## methods 
+[[FRET]]
+[[isothermal titration calorimetry]]
+[[radiometric ligand binding]]
+[[biolayer interferometry]]

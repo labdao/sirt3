@@ -43,7 +43,7 @@ fda_sirt3 = fda %>%
    # the path below expects the sirt3 repo to be cloned to the root dir
   mutate(protein_path = "/tmp/pdb/4bn4_protein_stripped_no_ions.pdb") %>%
   # only writing 5 for testing
-  head(10) %>%
+  # head(10) %>%
   write_csv(here("data/processed/affinity_ranking/SIRT3/input_protein_ligand.csv"))
   
 ```
@@ -52,32 +52,95 @@ fda_sirt3 = fda %>%
 
 ```{r}
 library(readr)
-fda_sirt3_ranking <- read_delim(here("data/processed/affinity_ranking/test/diffdock_221222 SIRT3-5/df_diffdock_results.tsv"), 
-    delim = "\t", escape_double = FALSE, 
-    trim_ws = TRUE) %>% 
-  mutate(replicate = 2) %>% 
-  rbind(read_delim(here("data/processed/affinity_ranking/test/diffdock_221220 SIRT3-5/df_diffdock_results.tsv"), 
-    delim = "\t", escape_double = FALSE, 
-    trim_ws = TRUE) %>% 
-  mutate(replicate = 1)) %>% 
-  rbind(read_delim(here("data/processed/affinity_ranking/test/diffdock_221222 SIRT3-10-ADPRibose/df_diffdock_results.tsv"), 
-    delim = "\t", escape_double = FALSE, 
-    trim_ws = TRUE) %>% 
-  mutate(replicate = 3))
+# fda_sirt3_ranking <- read_delim(here("data/processed/affinity_ranking/test/diffdock_221222 SIRT3-5/df_diffdock_results.tsv"), 
+#     delim = "\t", escape_double = FALSE, 
+#     trim_ws = TRUE) %>% 
+#   mutate(replicate = 2) %>% 
+#   rbind(read_delim(here("data/processed/affinity_ranking/test/diffdock_221220 SIRT3-5/df_diffdock_results.tsv"), 
+#     delim = "\t", escape_double = FALSE, 
+#     trim_ws = TRUE) %>% 
+#   mutate(replicate = 1)) %>% 
+#   rbind(read_delim(here("data/processed/affinity_ranking/test/diffdock_221222 SIRT3-10-ADPRibose/df_diffdock_results.tsv"), 
+#     delim = "\t", escape_double = FALSE, 
+#     trim_ws = TRUE) %>% 
+#   mutate(replicate = 3))
+
+fda_sirt3_ranking <- read_csv(here("data/processed/affinity_ranking/SIRT3/diffdock_221223 SIRT3-FDA300/results.csv")) %>% 
+  dplyr::select(ligand = smiles, everything())
 ```
 
 ```{r}
-fda_sirt3_ranking %>% 
-  filter(replicate == 3) %>% 
-  dplyr::select(ligand = smiles, everything()) %>%
+top_smina_fda <- fda_sirt3_ranking %>% nest(-ligand, -pdb_file) %>% 
+  expand_grid(., top = c(1:40)) %>%
+  mutate(top_data = purrr::map2(data, top, ~ .x %>% 
+                                  # pick the top n most confident poses
+                                   arrange(smina_scored_affinity) %>% 
+                                   head(min(nrow(.x), .y)) %>%
+           dplyr::select(diffdock_confidence, smina_scored_affinity, smina_minimized_affinity) %>%
+           mutate(diffdock_confidence = mean(diffdock_confidence),
+                  smina_scored_affinity = mean(smina_scored_affinity),
+                  smina_minimized_affinity = mean(smina_minimized_affinity)) %>% 
+           distinct())) 
+
+```
+
+
+```{r}
+top_smina_fda %>% 
+  filter(top == 10) %>% 
+  unnest(top_data) %>%
   left_join(fda_sirt3) %>% 
-  ggplot(aes(diffdock_confidence, smina_scored_affinity, color = ligand_id)) + 
-    geom_point()
+  drop_na() %>%
+  ggplot(aes(diffdock_confidence, smina_scored_affinity, color = (ligand_id %in% c("NAD-Ribose", "5514")))) + 
+    geom_point()# + 
+  #scale_y_sqrt()
 ```
 
 ```{r}
+top_smina_fda %>% 
+  filter(top == 10) %>% 
+  unnest(top_data) %>%
+  left_join(fda_sirt3) %>% 
+  drop_na()  %>% 
+  filter(diffdock_confidence > -0.5) %>% 
+  arrange(smina_scored_affinity) %>% 
+  head(2) %>% tail(1) %>%
+  dplyr::select(ligand) %>%
+  left_join(fda_sirt3_ranking) %>% arrange(smina_scored_affinity)
+```
+
+
+```{r}
 fda_sirt3_ranking %>% 
-  dplyr::select(ligand = smiles, everything()) %>%
+  filter(ligand)
+```
+
+
+```{r}
+top_smina_fda %>% 
+  filter(top == 1) %>% 
+  unnest(top_data) %>%
+  left_join(fda_sirt3) %>% 
+  drop_na() %>% 
+  ggplot(aes(smina_scored_affinity)) + geom_histogram() + scale_x_sqrt()
+```
+
+
+```{r}
+top_smina_fda %>% 
+  filter(top == 10) %>% 
+  unnest(top_data) %>%
+  left_join(fda_sirt3) %>% 
+  drop_na() %>%
+  arrange(desc(diffdock_confidence)) %>% View(
+    
+  )
+```
+
+
+```{r}
+fda_sirt3_ranking %>% 
+  dplyr::select(everything()) %>%
   left_join(fda_sirt3) %>% 
   arrange(desc(smina_scored_affinity))
 ```
